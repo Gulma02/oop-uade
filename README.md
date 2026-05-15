@@ -68,6 +68,19 @@ Luego ejecutar:
 ./start.sh
 ```
 
+## Desde IntelliJ IDEA
+
+Si se ejecuta desde IntelliJ, primero levantar la base:
+
+```bash
+docker compose up -d
+```
+
+Luego ejecutar `./start.sh` una vez para descargar `lib/mysql-connector-j-8.4.0.jar`.
+Si IntelliJ no reconoce el driver JDBC, agregar ese JAR desde:
+
+`File > Project Structure > Modules > Dependencies > + > JARs or Directories`
+
 ---
 
 # ¿Qué hace el script?
@@ -96,9 +109,13 @@ oop-uade/
 ├── docker/
 ├── src/
 │   ├── controllers/
-│   ├── models.dtos/
+│   ├── dto/
+│   ├── model/
 │   ├── persistence/
+│   ├── repository/
+│   ├── services/
 │   └── views/
+├── lib/
 ├── docker-compose.yml
 ├── start.sh
 ├── .env
@@ -153,4 +170,4 @@ docker ps
 - La interfaz gráfica Swing corre de forma nativa (NO dentro de Docker)
 - Docker se utiliza únicamente para la base de datos MySQL
 - No es necesario instalar XQuartz ni herramientas gráficas adicionales
-
+- El script descarga MySQL Connector/J en `lib/` si no existe

@@ -16,7 +16,7 @@ public class Carrera {
         this.jugador = jugador;
         this.pista = pista;
         this.caballos = new ArrayList<>(caballos);
-        this.caballos.forEach(Caballo::reiniciar);
+        this.caballos.forEach(caballo -> caballo.prepararParaCarrera(random));
     }
 
     public void avanzar() {

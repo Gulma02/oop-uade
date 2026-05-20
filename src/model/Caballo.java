@@ -11,6 +11,7 @@ public class Caballo {
     private double resistencia;
     private double energiaActual;
     private double distanciaRecorrida;
+    private double factorRendimiento;
     private EstrategiaAvance estrategiaAvance;
 
     public Caballo(int id, String nombre, double velocidadBase, double resistencia, EstrategiaAvance estrategiaAvance) {
@@ -32,9 +33,16 @@ public class Caballo {
         energiaActual = Math.max(0, energiaActual - calcularDesgaste());
     }
 
+    public void prepararParaCarrera(Random random) {
+        energiaActual = 100;
+        distanciaRecorrida = 0;
+        factorRendimiento = 0.85 + random.nextDouble(0.30);
+    }
+
     public void reiniciar() {
         energiaActual = 100;
         distanciaRecorrida = 0;
+        factorRendimiento = 1.0;
     }
 
     private double calcularDesgaste() {
@@ -63,6 +71,10 @@ public class Caballo {
 
     public double getDistanciaRecorrida() {
         return distanciaRecorrida;
+    }
+
+    public double getFactorRendimiento() {
+        return factorRendimiento;
     }
 
     public String getTipo() {

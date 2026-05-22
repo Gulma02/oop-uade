@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.HashMap;
+
 
 public class MainView extends JFrame {
     private JuegoController controller;
@@ -157,14 +159,36 @@ public class MainView extends JFrame {
         private CarreraEstadoDTO estado;
         private Map<Integer, Color> colores = new LinkedHashMap<>();
 
+        private Map<Integer, java.awt.image.BufferedImage> imagenesCaballos = new HashMap<>();
+        // 1. AGREGA LA VARIABLE DE LA META
+        private java.awt.image.BufferedImage imgMeta;
+
         public PistaPanel() {
-            setBackground(new Color(38, 120, 73));
+            setBackground(new Color(34, 139, 34));
             setBorder(BorderFactory.createTitledBorder("Pista"));
+
             colores.put(1, new Color(244, 90, 90));
             colores.put(2, new Color(248, 196, 72));
             colores.put(3, new Color(70, 150, 240));
             colores.put(4, new Color(180, 110, 230));
             colores.put(5, new Color(245, 245, 245));
+
+            // Cargar los 5 caballos
+            for (int i = 1; i <= 5; i++) {
+                try {
+                    java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/resources/caballo_" + i + ".png"));
+                    imagenesCaballos.put(i, img);
+                } catch (Exception e) {
+                    System.out.println("Aviso: No se pudo cargar /resources/caballo_" + i + ".png");
+                }
+            }
+
+            // 2. CARGAR LA IMAGEN DE LA META
+            try {
+                imgMeta = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/resources/meta.png"));
+            } catch (Exception e) {
+                System.out.println("Aviso: No se pudo cargar /resources/meta.png");
+            }
         }
 
         public void actualizar(CarreraEstadoDTO estado) {
@@ -180,10 +204,18 @@ public class MainView extends JFrame {
 
             int anchoPista = getWidth() - 120;
             int metaX = getWidth() - 58;
-            g.setColor(Color.WHITE);
-            g.setStroke(new BasicStroke(3));
-            g.drawLine(metaX, 42, metaX, getHeight() - 36);
-            g.drawString("META", metaX - 12, 28);
+
+            // 3. DIBUJAR LA META NUEVA
+            if (imgMeta != null) {
+                // Dibuja la imagen a lo largo de toda la línea de meta
+                g.drawImage(imgMeta, metaX - 25, 30, 50, getHeight() - 40, null);
+            } else {
+                // Si no pusiste la imagen, dibuja la línea blanca vieja
+                g.setColor(Color.WHITE);
+                g.setStroke(new BasicStroke(3));
+                g.drawLine(metaX, 42, metaX, getHeight() - 36);
+                g.drawString("META", metaX - 12, 28);
+            }
 
             if (estado == null) {
                 g.setFont(new Font("Arial", Font.BOLD, 18));
@@ -193,6 +225,7 @@ public class MainView extends JFrame {
 
             int y = 66;
             int indice = 1;
+
             for (CaballoDTO caballo : estado.getCaballos()) {
                 double proporcion = caballo.getDistanciaRecorrida() / estado.getDistanciaTotal();
                 int x = 28 + (int) (Math.min(1.0, proporcion) * anchoPista);
@@ -200,11 +233,21 @@ public class MainView extends JFrame {
                 g.setColor(new Color(255, 255, 255, 120));
                 g.drawLine(28, y + 17, metaX, y + 17);
 
-                g.setColor(colores.getOrDefault(indice, Color.LIGHT_GRAY));
-                g.fillOval(x, y, 34, 24);
-                g.setColor(Color.BLACK);
-                g.drawOval(x, y, 34, 24);
-                g.drawString(caballo.getNombre() + " - Energia " + (int) caballo.getEnergiaActual() + "%", 28, y - 6);
+                java.awt.image.BufferedImage imgActual = imagenesCaballos.get(indice);
+
+                if (imgActual != null) {
+                    g.drawImage(imgActual, x, y - 15, 50, 50, null);
+                } else {
+                    g.setColor(colores.getOrDefault(indice, Color.LIGHT_GRAY));
+                    g.fillOval(x, y, 34, 24);
+                    g.setColor(Color.BLACK);
+                    g.drawOval(x, y, 34, 24);
+                }
+
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Arial", Font.BOLD, 12));
+                g.drawString(caballo.getNombre() + " - Energía " + (int) caballo.getEnergiaActual() + "%", 28, y - 6);
+
                 y += 70;
                 indice++;
             }

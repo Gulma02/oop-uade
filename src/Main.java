@@ -1,7 +1,9 @@
 import views.MainView;
 
+import javax.swing.*;
+
 public class Main {
     public static void main(String[] args) {
-        new MainView();
+        SwingUtilities.invokeLater(MainView::new);
     }
 }

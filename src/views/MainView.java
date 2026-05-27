@@ -113,7 +113,8 @@ public class MainView extends JFrame {
         centerWrapper.setOpaque(false);
 
         JPanel formulario = crearCardPanel();
-        formulario.setPreferredSize(new Dimension(390, 430));
+        // SE REMOVIÓ: formulario.setPreferredSize(...)
+        // Dejar que el layout maneje el tamaño dinámicamente evita recortes entre sistemas operativos.
         formulario.setLayout(new GridBagLayout());
 
         JLabel formTitle = new JLabel("Login / Registro");
@@ -139,30 +140,31 @@ public class MainView extends JFrame {
         nombreField = new JTextField(16);
         emailField = new JTextField(16);
         caballosCombo = new JComboBox<>();
-        // Estilizar únicamente los campos de texto en la pantalla de login.  El combo de caballos se utilizará
-        // más adelante para seleccionar el caballo al iniciar la carrera.
+
         estilizarInput(nombreField);
         estilizarInput(emailField);
 
         crearJugadorButton = new JButton("Crear jugador");
         estilizarBotonPrimario(crearJugadorButton);
 
-        // Campos: solo nombre y mail en la pantalla de registro
-        agregarCampo(formulario, gbc, 2, "Nombre", nombreField);
-        agregarCampo(formulario, gbc, 4, "Mail", emailField);
+        // CORRECCIÓN: Se ajustaron los índices de fila para evitar solapamientos
+        // 'Nombre' ocupará las filas de la grilla 2 y 3
+        agregarCampo(formulario, gbc, 1, "Nombre", nombreField);
+        // 'Mail' ocupará las filas de la grilla 4 y 5
+        agregarCampo(formulario, gbc, 2, "Mail", emailField);
 
-        // Botón para crear jugador
-        gbc.gridy = 8;
-        gbc.insets = new Insets(14, 0, 0, 0);
+        // El botón se mueve a la fila de la grilla 6 (libre de colisiones)
+        gbc.gridy = 6;
+        gbc.insets = new Insets(20, 0, 0, 0); // Un poco más de espacio superior
         gbc.fill = GridBagConstraints.HORIZONTAL;
         formulario.add(crearJugadorButton, gbc);
 
-        // Etiqueta de estado debajo del botón
+        // La etiqueta de estado se mueve a la fila de la grilla 7
         estadoLabel = new JLabel("Crea un jugador para comenzar.");
         estadoLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
         estadoLabel.setForeground(new Color(94, 108, 132));
 
-        gbc.gridy = 9;
+        gbc.gridy = 7;
         gbc.insets = new Insets(14, 0, 0, 0);
         formulario.add(estadoLabel, gbc);
 
@@ -559,17 +561,17 @@ public class MainView extends JFrame {
 
             for (int i = 1; i <= 5; i++) {
                 try {
-                    java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/resources/caballo_" + i + ".PNG"));
+                    java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/caballo_" + i + ".png"));
                     imagenesCaballos.put(i, img);
                 } catch (Exception e) {
-                    System.out.println("Aviso: No se pudo cargar /resources/caballo_" + i + ".png");
+                    System.out.println("Aviso: No se pudo cargar /caballo_" + i + ".png");
                 }
             }
 
             try {
-                imgMeta = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/resources/meta.png"));
+                imgMeta = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/meta.png"));
             } catch (Exception e) {
-                System.out.println("Aviso: No se pudo cargar /resources/meta.png");
+                System.out.println("Aviso: No se pudo cargar /meta.png");
             }
         }
 

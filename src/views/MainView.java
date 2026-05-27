@@ -383,6 +383,9 @@ public class MainView extends JFrame {
         button.setFocusPainted(false);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         button.setBorder(new EmptyBorder(12, 16, 12, 16));
+
+        button.setOpaque(true);
+        button.setBorderPainted(false);
     }
 
     private void estilizarBotonSecundario(JButton button) {
@@ -392,6 +395,9 @@ public class MainView extends JFrame {
         button.setFocusPainted(false);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         button.setBorder(new EmptyBorder(12, 16, 12, 16));
+
+        button.setOpaque(true);
+        button.setBorderPainted(false);
     }
 
     private static class RoundedBorder extends AbstractBorder {
